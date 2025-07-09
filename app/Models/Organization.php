@@ -13,12 +13,12 @@ class Organization extends Model
 
     public function users()
     {
-        $this->hasMany(User::class, 'organization_id');
+        return $this->hasMany(User::class, 'organization_id');
     }
 
     public function projects()
     {
-        $this->hasMany(Project::class, 'organization_id');
+        return $this->hasMany(Project::class, 'organization_id');
     }
 
 }

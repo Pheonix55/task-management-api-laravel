@@ -20,7 +20,7 @@ class Task extends Model
     }
     public function project()
     {
-        $this->belongsTo(Project::class, 'project_id');
+        return $this->belongsTo(Project::class, 'project_id');
     }
 
 }

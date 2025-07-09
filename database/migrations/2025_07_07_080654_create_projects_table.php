@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
+            $table->string('details')->nullable();
             $table->json('tech_stack')->nullable();
             $table->integer('created_by');
             $table->timestamps();

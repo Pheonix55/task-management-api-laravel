@@ -10,16 +10,17 @@ class Project extends Model
         'name',
         'description',
         'tech_stack',
+        'details',
         'organization_id',
         'created_by'
     ];
     public function organization()
     {
-        $this->belongsTo(Organization::class, 'organization_id');
+        return $this->belongsTo(Organization::class, 'organization_id');
     }
 
     public function tasks()
     {
-        $this->hasMany(Task::class, 'project_id');
+        return $this->hasMany(Task::class, 'project_id');
     }
 }
