@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Services;
+use App\Http\Requests\AttachementRequest;
 use App\Models\Task;
+use Request;
 class TaskService
 {
     public function getAllTasks()
@@ -33,5 +35,40 @@ class TaskService
         }
         return $task->delete();
     }
+
+
+    public function addAttachementToTask(AttachementRequest $request, $id)
+    {
+        $task = Task::findOrFail($id);
+
+        return $task->addMediaFromRequest('file')
+            ->withCustomProperties([
+                'uploaded_by' => auth()->id(),
+                'type' => $request->input('type', 'general'),
+            ])
+            ->toMediaCollection('attachments');
+    }
+
+
+    public function listAttachments($id)
+    {
+        $task = Task::find($id);
+        return $task->getMedia('attachments');
+    }
+
+    public function deleteAttachments($task_id, $media_id): bool
+    {
+        $task = Task::findOrFail($task_id);
+        $media = $task->media()->where('id', $media_id)->first();
+        if (!$media) {
+            return false;
+        }
+        return $media->delete();
+    }
+    public function deleteAllAttachmentsforTask($id)
+    {
+        
+    }
+
 
 }

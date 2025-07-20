@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AttachementRequest;
 use App\Http\Requests\TaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Resources\AttachmentResource;
 use App\Http\Resources\TaskResource;
 use Illuminate\Http\Request;
 use App\Services\TaskService;
@@ -41,5 +43,38 @@ class TaskController extends Controller
         $service->deleteTask($id);
         return $this->successResponse('task deleted successfully');
     }
+
+    public function addAttachments(TaskService $service, AttachementRequest $request, $id)
+    {
+        try {
+            $media = $service->addAttachementToTask($request, $id); // full request passed
+            return $this->successResponse(new AttachmentResource($media), 'Attachment uploaded successfully', 201);
+        } catch (Throwable $th) {
+            return $this->errorResponse($th->getMessage(), code: 500);
+        }
+    }
+    public function listAttachments(TaskService $service, $id)
+    {
+        try {
+
+            return $this->successResponse(
+                AttachmentResource::collection($service->listAttachments($id))
+            );
+        } catch (Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 500);
+        }
+    }
+
+    public function destroyAttachment($taskId, $mediaId, TaskService $service)
+    {
+        $deleted = $service->deleteAttachments($taskId, $mediaId);
+
+        if ($deleted) {
+            return $this->successResponse(message: 'Attachment deleted successfully');
+        }
+
+        return $this->errorResponse(message: 'Attachment not found');
+    }
+
 
 }
