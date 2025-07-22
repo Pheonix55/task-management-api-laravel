@@ -32,7 +32,8 @@ class TaskController extends Controller
     {
         try {
             $data = $service->updateTask($id, $request->validated());
-            return $this->successResponse($data);
+            
+            return $this->successResponse($data, 'task updated successfully');
         } catch (Throwable $th) {
             return $this->errorResponse($th->getMessage(), 'something went wrong', 500);
         }

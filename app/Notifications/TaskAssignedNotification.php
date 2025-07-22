@@ -19,7 +19,8 @@ class TaskAssignedNotification extends Notification
 
     public function via($notifiable)
     {
-        return ['mail', 'database']; // or just 'database'
+        return ['database']; // or just 'database'
+        // ['mail', 'database']; // or just 'database'
     }
 
     public function toMail($notifiable)

@@ -3,6 +3,8 @@
 namespace App\Services;
 use App\Http\Requests\AttachementRequest;
 use App\Models\Task;
+use App\Models\User;
+use App\Notifications\TaskAssignedNotification;
 use Request;
 class TaskService
 {
@@ -21,8 +23,18 @@ class TaskService
         if (!$task) {
             throw new \Exception("Task not found", 404);
         }
+        if ($data['assigned_to']) {
+            $previousUserId = $task->assigned_to;
+            $newUserId = $data['assigned_to'];
+            $newUser = User::find($newUserId);
+            if ($newUser) {
+                $newUser->notify(new TaskAssignedNotification($task));
+            }
+
+        }
         $task->update($data);
         $task->save();
+
         return $task;
     }
 
@@ -65,10 +77,7 @@ class TaskService
         }
         return $media->delete();
     }
-    public function deleteAllAttachmentsforTask($id)
-    {
-        
-    }
+
 
 
 }
