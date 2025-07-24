@@ -9,6 +9,12 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Task extends Model implements HasMedia
 {
     use InteractsWithMedia;
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_IN_PROGRESS = 'in_progress';
+    public const STATUS_COMPLETED = 'completed';
+    public const PRIORITY_LOW = 'low';
+    public const PRIORITY_MEDIUM = 'medium';
+    public const PRIORITY_HIGH = 'high';
     protected $fillable = [
         'name',
         'type',
@@ -16,6 +22,8 @@ class Task extends Model implements HasMedia
         'description',
         'assigned_to',
         'project_id',
+        'status',
+        'assigned_at',
     ];
 
     public function registerMediaCollections(): void
@@ -35,7 +43,7 @@ class Task extends Model implements HasMedia
     }
 
     protected static function booted()
-        {
+    {
         static::deleting(function ($task) {
             $task->clearMediaCollection('attachments'); // delete files from disk + DB
         });
@@ -54,5 +62,10 @@ class Task extends Model implements HasMedia
     {
         return $this->hasMany(Comment::class);
     }
+    public function activities()
+    {
+        return $this->hasMany(UserTaskActivities::class);
+    }
+
 
 }

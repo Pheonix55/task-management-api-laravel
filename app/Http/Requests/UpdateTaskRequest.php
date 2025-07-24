@@ -27,7 +27,14 @@ class UpdateTaskRequest extends FormRequest
             'detail' => 'sometimes|required|max:200',
             'type' => 'sometimes|required',
             'project_id' => 'sometimes|required|integer',
-            'assigned_to' => 'sometimes|required|integer'
+            'assigned_to' => 'sometimes|required|integer',
+            'status' => 'sometimes|required|string',
+            'priority' => 'sometimes|required|string',
+            'deadline' => 'sometimes|required|date',
+            'start_date' => 'sometimes|required|date',
+
+
+
         ];
     }
 }

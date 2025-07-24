@@ -82,4 +82,24 @@ class ProjectController extends Controller
             return response()->json(['success' => false, 'message' => 'something went wrong ' . $th->getMessage()], 500);
         }
     }
+
+    public function projectReport(ProjectService $service, $id)
+    {
+        try {
+            $data = $service->projectReport($id);
+            return $this->successResponse($data);
+        } catch (Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 'something went wrong', 500);
+        }
+    }
+
+    public function topContributorProjectWise(ProjectService $service, $id)
+    {
+        try {
+            $data = $service->topContributorProjectWise($id);
+            return $this->successResponse($data);
+        } catch (Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 'something went wrong', 500);
+        }
+    }
 }

@@ -4,7 +4,9 @@ namespace App\Services;
 use App\Http\Requests\AttachementRequest;
 use App\Models\Task;
 use App\Models\User;
+use App\Models\UserTaskActivities;
 use App\Notifications\TaskAssignedNotification;
+use Auth;
 use Request;
 class TaskService
 {
@@ -14,29 +16,45 @@ class TaskService
     }
     public function storeTask(array $data)
     {
+        if (isset($data['assigned_to'])) {
+            $data['assigned_at'] = now();
+        }
         return Task::create($data);
     }
 
-    public function updateTask($id, array $data)
+    public function updateTask($id, array $data, ActivityService $service)
     {
         $task = Task::find($id);
+
         if (!$task) {
-            throw new \Exception("Task not found", 404);
+            abort(404, 'Task not found');
         }
-        if ($data['assigned_to']) {
-            $previousUserId = $task->assigned_to;
-            $newUserId = $data['assigned_to'];
-            $newUser = User::find($newUserId);
+
+        if (isset($data['assigned_to'])) {
+            $data['assigned_at'] = now();
+
+            $newUser = User::find($data['assigned_to']);
             if ($newUser) {
                 $newUser->notify(new TaskAssignedNotification($task));
+            } else {
+                throw new \Exception("Assigned user not found", 400);
             }
-
         }
+
+        if (isset($data['status']) && $data['status'] == Task::STATUS_COMPLETED) {
+            $activityData = [
+                'task_id' => $task->id,
+                'user_id' => Auth::id(),
+                'action' => UserTaskActivities::ACTION_COMPLETED,
+            ];
+            $service->logTaskCompleteActivity($activityData);
+        }
+
         $task->update($data);
         $task->save();
-
         return $task;
     }
+
 
     public function deleteTask($id)
     {

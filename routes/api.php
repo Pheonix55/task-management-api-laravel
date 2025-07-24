@@ -35,6 +35,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/projects/{id}', [ProjectController::class, 'update']);
     Route::delete('/projects/{id}', [ProjectController::class, 'delete']);
     Route::get('/projects/by/{id}', [ProjectController::class, 'getProjectsByOrganization']);
+    Route::get('/project/{id}/report', [ProjectController::class, 'projectReport']);
+    Route::get('/project/{id}/top-contributor', [ProjectController::class, 'topContributorProjectWise']);
 
 
     // tasks

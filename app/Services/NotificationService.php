@@ -9,7 +9,7 @@ class NotificationService
         $user = Auth::user();
 
         $notification = $user->notifications()->where('id', $id)->first();
-        dd($id, $notification, Auth::user()->notifications->pluck('id'));
+        // dd($id, $notification, Auth::user()->notifications->pluck('id'));
 
         if (!$notification) {
             return false;

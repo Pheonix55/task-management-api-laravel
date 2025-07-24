@@ -8,6 +8,7 @@ use App\Http\Requests\TaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\AttachmentResource;
 use App\Http\Resources\TaskResource;
+use App\Services\ActivityService;
 use Illuminate\Http\Request;
 use App\Services\TaskService;
 use Throwable;
@@ -28,11 +29,11 @@ class TaskController extends Controller
             return $this->errorResponse($th->getMessage(), 'something went wrong', 500);
         }
     }
-    public function update(TaskService $service, UpdateTaskRequest $request, $id)
+    public function update(TaskService $service, UpdateTaskRequest $request, $id, ActivityService $activityService)
     {
         try {
-            $data = $service->updateTask($id, $request->validated());
-            
+            $data = $service->updateTask($id, $request->validated(), $activityService);
+
             return $this->successResponse($data, 'task updated successfully');
         } catch (Throwable $th) {
             return $this->errorResponse($th->getMessage(), 'something went wrong', 500);

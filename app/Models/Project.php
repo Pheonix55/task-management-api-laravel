@@ -23,4 +23,6 @@ class Project extends Model
     {
         return $this->hasMany(Task::class, 'project_id');
     }
+
+    
 }

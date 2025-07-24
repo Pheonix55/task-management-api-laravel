@@ -27,7 +27,12 @@ class TaskRequest extends FormRequest
             'detail' => 'required|max:200',
             'type' => 'sometimes|required',
             'project_id' => 'required|integer',
-            'assigned_to' => 'required|integer'
+            'assigned_to' => 'required|integer',
+            'status' => 'sometimes|required|string',
+            'priority' => 'sometimes|required|string',
+            'deadline' => 'sometimes|required|date',
+            'start_date' => 'sometimes|required|date',
+
         ];
     }
 }
